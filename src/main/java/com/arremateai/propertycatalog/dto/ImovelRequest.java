@@ -28,7 +28,10 @@ public record ImovelRequest(
         @Size(max = 300)
         String instituicao,
 
+        @Size(max = 2000, message = "Link do edital deve ter no máximo 2000 caracteres")
         String linkEdital,
+
+        @Size(max = 2000, message = "Link do leilão deve ter no máximo 2000 caracteres")
         String linkLeilao,
 
         @Pattern(regexp = "JUDICIAL|EXTRAJUDICIAL|ADMINISTRATIVO|VOLUNTARIO",
@@ -51,6 +54,7 @@ public record ImovelRequest(
         String condicao,
 
         Boolean aceitaFinanciamento,
+        @Size(max = 5000, message = "Observações devem ter no máximo 5000 caracteres")
         String observacoes,
 
         @Pattern(regexp = "DISPONIVEL|VENDIDO|SUSPENSO", message = "Status inválido")

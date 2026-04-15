@@ -145,9 +145,21 @@ public class ImovelService {
     }
 
     @Transactional(readOnly = true)
-    public List<ImovelResponse> buscarMaisProcurados(int limite) {
-        // Sem campo de visitas, retornamos os mais recentes como fallback
-        return buscarRecentes(limite);
+    public List<ImovelResponse> buscarMaisProcurados(int limite, VisualizacaoService visualizacaoService) {
+        List<UUID> maisVisualizadosIds = visualizacaoService.buscarMaisVisualizados(limite);
+        if (maisVisualizadosIds.isEmpty()) {
+            // Fallback: se não há visualizações, retorna os mais recentes
+            return buscarRecentes(limite);
+        }
+        List<ImovelResponse> result = maisVisualizadosIds.stream()
+                .map(id -> imovelRepo.findByIdAndAtivoTrue(id).orElse(null))
+                .filter(java.util.Objects::nonNull)
+                .map(this::converterParaResponse)
+                .toList();
+        if (result.isEmpty()) {
+            return buscarRecentes(limite);
+        }
+        return result;
     }
 
     @Transactional(readOnly = true)

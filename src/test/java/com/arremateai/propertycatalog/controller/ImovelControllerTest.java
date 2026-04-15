@@ -4,6 +4,8 @@ import com.arremateai.propertycatalog.dto.*;
 import com.arremateai.propertycatalog.service.ImagemService;
 import com.arremateai.propertycatalog.service.ImovelService;
 import com.arremateai.propertycatalog.service.VideoService;
+import com.arremateai.propertycatalog.service.VisualizacaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +36,9 @@ class ImovelControllerTest {
 
     @Mock
     private VideoService videoService;
+
+    @Mock
+    private VisualizacaoService visualizacaoService;
 
     @InjectMocks
     private ImovelController imovelController;
@@ -94,9 +99,11 @@ class ImovelControllerTest {
     @Test
     @DisplayName("Deve retornar imóvel por ID")
     void deveRetornarImovelPorId() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRemoteAddr()).thenReturn("127.0.0.1");
         when(imovelService.buscarPorId(IMOVEL_ID)).thenReturn(criarImovelResponse());
 
-        var resultado = imovelController.buscarPorId(IMOVEL_ID);
+        var resultado = imovelController.buscarPorId(IMOVEL_ID, request, null);
 
         assertThat(resultado.getStatusCode().value()).isEqualTo(200);
         assertThat(resultado.getBody().id()).isEqualTo(IMOVEL_ID);
@@ -133,7 +140,7 @@ class ImovelControllerTest {
     @Test
     @DisplayName("Deve retornar imóveis mais procurados")
     void deveRetornarImoveisMaisProcurados() {
-        when(imovelService.buscarMaisProcurados(6)).thenReturn(List.of(criarImovelResponse()));
+        when(imovelService.buscarMaisProcurados(6, visualizacaoService)).thenReturn(List.of(criarImovelResponse()));
 
         var resultado = imovelController.maisProcurados(6);
 

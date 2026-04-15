@@ -11,6 +11,8 @@ import com.arremateai.propertycatalog.exception.BusinessException;
 import com.arremateai.propertycatalog.repository.ImagemImovelRepository;
 import com.arremateai.propertycatalog.repository.ImovelRepository;
 import com.arremateai.propertycatalog.repository.VideoImovelRepository;
+import com.arremateai.propertycatalog.repository.VisualizacaoImovelRepository;
+import com.arremateai.propertycatalog.repository.VisualizacaoImovelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,12 @@ class ImovelServiceTest {
 
     @Mock
     private VideoImovelRepository videoRepo;
+Mock
+    private VisualizacaoImovelRepository visualizacaoRepo;
+
+    @
+    @Mock
+    private VisualizacaoImovelRepository visualizacaoRepo;
 
     @InjectMocks
     private ImovelService imovelService;
@@ -443,15 +451,19 @@ class ImovelServiceTest {
         assertThat(resultado).hasSize(1);
     }
 
-    @Test
-    @DisplayName("Deve retornar mesmos resultados de buscarRecentes em buscarMaisProcurados")
-    void deveRetornarMesmosResultadosDeBuscarRecentesEmBuscarMaisProcurados() {
-        Imovel ativo = criarImovelPadrao();
+    @TesVisualizacaoService visualizacaoService = mock(VisualizacaoService.class);
+        when(visualizacaoService.buscarMaisVisualizados(5)).thenReturn(List.of());
         when(imovelRepo.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(ativo)));
         when(imagemRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
         when(videoRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
 
-        List<ImovelResponse> resultado = imovelService.buscarMaisProcurados(5);
+        List<ImovelResponse> resultado = imovelService.buscarMaisProcurados(5, visualizacaoServiceass);
+        when(visualizacaoService.buscarMaisVisualizados(5)).thenReturn(List.of());
+        when(imovelRepo.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(ativo)));
+        when(imagemRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
+        when(videoRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
+
+        List<ImovelResponse> resultado = imovelService.buscarMaisProcurados(5, visualizacaoService);
 
         assertThat(resultado).hasSize(1);
     }

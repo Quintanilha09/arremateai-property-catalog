@@ -4,6 +4,8 @@ import com.arremateai.propertycatalog.dto.*;
 import com.arremateai.propertycatalog.service.ImovelService;
 import com.arremateai.propertycatalog.service.ImagemService;
 import com.arremateai.propertycatalog.service.VideoService;
+import com.arremateai.propertycatalog.service.VisualizacaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ public class ImovelController {
     private final ImovelService imovelService;
     private final ImagemService imagemService;
     private final VideoService videoService;
+    private final VisualizacaoService visualizacaoService;
 
     // ---- public endpoints ----
 
@@ -57,7 +60,14 @@ public class ImovelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ImovelResponse> buscarPorId(@PathVariable UUID id) {
+    public ResponseEntity<ImovelResponse> buscarPorId(
+            @PathVariable UUID id,
+            HttpServletRequest request,
+            @RequestHeader(value = "X-User-Id", required = false) String userId) {
+        // Registrar visualização ao acessar detalhes do imóvel
+        String ip = getClientIp(request);
+        UUID userUuid = userId != null ? UUID.fromString(userId) : null;
+        visualizacaoService.registrarVisualizacao(id, ip, userUuid);
         return ResponseEntity.ok(imovelService.buscarPorId(id));
     }
 
@@ -76,7 +86,15 @@ public class ImovelController {
     @GetMapping("/mais-procurados")
     public ResponseEntity<List<ImovelResponse>> maisProcurados(
             @RequestParam(defaultValue = "6") int limite) {
-        return ResponseEntity.ok(imovelService.buscarMaisProcurados(limite));
+        return ResponseEntity.ok(imovelService.buscarMaisProcurados(limite, visualizacaoService));
+    }
+
+    @GetMapping("/{id}/estatisticas")
+    public ResponseEntity<EstatisticasImovelResponse> estatisticasImovel(
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") String userId,
+            @RequestHeader("X-User-Role") String role) {
+        return ResponseEntity.ok(visualizacaoService.buscarEstatisticasImovel(id));
     }
 
     @GetMapping("/estatisticas")
@@ -231,5 +249,15 @@ public class ImovelController {
 
         videoService.removerVideo(videoId);
         return ResponseEntity.noContent().build();
+    }
+
+    // ---- helpers ----
+
+    private String getClientIp(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 }

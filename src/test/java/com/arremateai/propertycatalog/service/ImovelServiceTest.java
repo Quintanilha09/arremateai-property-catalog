@@ -12,7 +12,7 @@ import com.arremateai.propertycatalog.repository.ImagemImovelRepository;
 import com.arremateai.propertycatalog.repository.ImovelRepository;
 import com.arremateai.propertycatalog.repository.VideoImovelRepository;
 import com.arremateai.propertycatalog.repository.VisualizacaoImovelRepository;
-import com.arremateai.propertycatalog.repository.VisualizacaoImovelRepository;
+import com.arremateai.propertycatalog.service.VisualizacaoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,10 +48,7 @@ class ImovelServiceTest {
 
     @Mock
     private VideoImovelRepository videoRepo;
-Mock
-    private VisualizacaoImovelRepository visualizacaoRepo;
 
-    @
     @Mock
     private VisualizacaoImovelRepository visualizacaoRepo;
 
@@ -451,13 +448,11 @@ Mock
         assertThat(resultado).hasSize(1);
     }
 
-    @TesVisualizacaoService visualizacaoService = mock(VisualizacaoService.class);
-        when(visualizacaoService.buscarMaisVisualizados(5)).thenReturn(List.of());
-        when(imovelRepo.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(ativo)));
-        when(imagemRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
-        when(videoRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());
-
-        List<ImovelResponse> resultado = imovelService.buscarMaisProcurados(5, visualizacaoServiceass);
+    @Test
+    @DisplayName("Deve retornar imóveis mais procurados baseado em visualizações")
+    void deveRetornarImoveisMaisProcuradosBaseadoEmVisualizacoes() {
+        Imovel ativo = criarImovelPadrao();
+        VisualizacaoService visualizacaoService = mock(VisualizacaoService.class);
         when(visualizacaoService.buscarMaisVisualizados(5)).thenReturn(List.of());
         when(imovelRepo.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(ativo)));
         when(imagemRepo.findByImovelIdOrderByOrdemAsc(any())).thenReturn(List.of());

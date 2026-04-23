@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("Externalização de Configurações do Property-Catalog (E1-H4)")
 class ExternalizacaoConfiguracoesTest {
 
-    private static String conteudoApplicationProperties;
+    private static String conteudoApplicationYml;
     private static String conteudoEnvExample;
 
-    private static final Path CAMINHO_APPLICATION_PROPERTIES = Path.of("src/main/resources/application.properties");
+    private static final Path CAMINHO_APPLICATION_YML = Path.of("src/main/resources/application.yml");
     private static final Path CAMINHO_ENV_EXAMPLE = Path.of(".env.example");
 
     private static final Pattern PADRAO_VARIAVEL_AMBIENTE = Pattern.compile("\\$\\{([A-Z_0-9]+)(?::([^}]*))?}");
@@ -34,72 +34,72 @@ class ExternalizacaoConfiguracoesTest {
 
     @BeforeAll
     static void setUp() throws IOException {
-        conteudoApplicationProperties = Files.readString(CAMINHO_APPLICATION_PROPERTIES);
+        conteudoApplicationYml = Files.readString(CAMINHO_APPLICATION_YML);
         conteudoEnvExample = Files.readString(CAMINHO_ENV_EXAMPLE);
     }
 
-    // ==================== APPLICATION.PROPERTIES — EXISTÊNCIA ====================
+    // ==================== APPLICATION.YML — EXISTÊNCIA ====================
 
     @Test
-    @DisplayName("Deve existir o arquivo application.properties")
-    void deveExistirArquivoApplicationProperties() {
-        assertThat(CAMINHO_APPLICATION_PROPERTIES).exists();
+    @DisplayName("Deve existir o arquivo application.yml")
+    void deveExistirArquivoApplicationYml() {
+        assertThat(CAMINHO_APPLICATION_YML).exists();
     }
 
-    // ==================== APPLICATION.PROPERTIES — PORTA ====================
+    // ==================== APPLICATION.YML — PORTA ====================
 
     @Test
     @DisplayName("Deve externalizar a porta do servidor com default 8082")
     void deveExternalizarPortaDoServidorComDefault() {
-        assertThat(conteudoApplicationProperties).contains("${SERVER_PORT:8082}");
+        assertThat(conteudoApplicationYml).contains("${SERVER_PORT:8082}");
     }
 
-    // ==================== APPLICATION.PROPERTIES — BANCO DE DADOS ====================
+    // ==================== APPLICATION.YML — BANCO DE DADOS ====================
 
     @Test
     @DisplayName("Deve decompor URL do banco em DB_HOST, DB_PORT e DB_NAME")
     void deveDecomporUrlDoBancoEmVariaveis() {
-        assertThat(conteudoApplicationProperties).contains("${DB_HOST:localhost}");
-        assertThat(conteudoApplicationProperties).contains("${DB_PORT:5433}");
-        assertThat(conteudoApplicationProperties).contains("${DB_NAME:property_catalog_db}");
+        assertThat(conteudoApplicationYml).contains("${DB_HOST:localhost}");
+        assertThat(conteudoApplicationYml).contains("${DB_PORT:5433}");
+        assertThat(conteudoApplicationYml).contains("${DB_NAME:property_catalog_db}");
     }
 
     @Test
     @DisplayName("Não deve conter URL do banco hardcoded")
     void naoDeveConterUrlDoBancoHardcoded() {
-        assertThat(conteudoApplicationProperties)
+        assertThat(conteudoApplicationYml)
                 .doesNotContain("jdbc:postgresql://localhost:5433/property_catalog_db");
     }
 
     @Test
     @DisplayName("DB_PASSWORD não deve ter valor default (obrigatório)")
     void dbPasswordNaoDeveTerDefault() {
-        assertThat(conteudoApplicationProperties).contains("${DB_PASSWORD}");
-        assertThat(conteudoApplicationProperties).doesNotContain("${DB_PASSWORD:");
+        assertThat(conteudoApplicationYml).contains("${DB_PASSWORD}");
+        assertThat(conteudoApplicationYml).doesNotContain("${DB_PASSWORD:");
     }
 
     @Test
     @DisplayName("URL do banco deve seguir formato JDBC correto com variáveis decompostas")
     void urlDoBancoDeveSegurFormatoJdbcCorreto() {
-        assertThat(conteudoApplicationProperties)
+        assertThat(conteudoApplicationYml)
                 .containsPattern("jdbc:postgresql://\\$\\{DB_HOST[^}]*}:\\$\\{DB_PORT[^}]*}/\\$\\{DB_NAME[^}]*}");
     }
 
-    // ==================== APPLICATION.PROPERTIES — SEGURANÇA ====================
+    // ==================== APPLICATION.YML — SEGURANÇA ====================
 
     @Test
-    @DisplayName("Não deve conter senhas em texto plano no application.properties")
+    @DisplayName("Não deve conter senhas em texto plano no application.yml")
     void naoDeveConterSenhasEmTextoPlano() {
-        assertThat(conteudoApplicationProperties).doesNotContain("arremateai123");
+        assertThat(conteudoApplicationYml).doesNotContain("arremateai123");
     }
 
     @Test
     @DisplayName("Não deve exibir SQL em logs de produção (segurança)")
     void naoDeveMostrarSqlEmLogs() {
-        assertThat(conteudoApplicationProperties).contains("spring.jpa.show-sql=false");
+        assertThat(conteudoApplicationYml).contains("show-sql: false");
     }
 
-    // ==================== APPLICATION.PROPERTIES — VARIÁVEIS EXTERNALIZADAS ====================
+    // ==================== APPLICATION.YML — VARIÁVEIS EXTERNALIZADAS ====================
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -111,10 +111,10 @@ class ExternalizacaoConfiguracoesTest {
             "DB_PASSWORD",
             "LOG_LEVEL_APP"
     })
-    @DisplayName("Deve externalizar variável no application.properties")
+    @DisplayName("Deve externalizar variável no application.yml")
     void deveExternalizarVariavel(String variavel) {
-        assertThat(conteudoApplicationProperties)
-                .as("Variável %s deve estar externalizada no application.properties", variavel)
+        assertThat(conteudoApplicationYml)
+                .as("Variável %s deve estar externalizada no application.yml", variavel)
                 .contains("${" + variavel);
     }
 
@@ -123,13 +123,13 @@ class ExternalizacaoConfiguracoesTest {
     @Test
     @DisplayName("Deve ter actuator expondo apenas endpoint de health")
     void deveTerActuatorExpondoApenasHealth() {
-        assertThat(conteudoApplicationProperties).contains("management.endpoints.web.exposure.include=health");
+        assertThat(conteudoApplicationYml).contains("include: health");
     }
 
     @Test
     @DisplayName("Não deve expor detalhes do health check (segurança)")
     void naoDeveExporDetalhesDoHealthCheck() {
-        assertThat(conteudoApplicationProperties).contains("management.endpoint.health.show-details=never");
+        assertThat(conteudoApplicationYml).contains("show-details: never");
     }
 
     // ==================== .ENV.EXAMPLE — EXISTÊNCIA ====================
@@ -160,21 +160,21 @@ class ExternalizacaoConfiguracoesTest {
     }
 
     @Test
-    @DisplayName("Todas as variáveis do application.properties devem estar documentadas no .env.example")
+    @DisplayName("Todas as variáveis do application.yml devem estar documentadas no .env.example")
     void todasAsVariaveisDevemEstarDocumentadasNoEnvExample() {
-        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationProperties);
+        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationYml);
 
         int quantidadeVariaveis = 0;
         while (matcher.find()) {
             String variavel = matcher.group(1);
             quantidadeVariaveis++;
             assertThat(conteudoEnvExample)
-                    .as("Variável %s usada no application.properties deve estar no .env.example", variavel)
+                    .as("Variável %s usada no application.yml deve estar no .env.example", variavel)
                     .contains(variavel);
         }
 
         assertThat(quantidadeVariaveis)
-                .as("Deve haver pelo menos uma variável externalizada no application.properties")
+                .as("Deve haver pelo menos uma variável externalizada no application.yml")
                 .isGreaterThan(0);
     }
 
@@ -251,7 +251,7 @@ class ExternalizacaoConfiguracoesTest {
         var propriedades = new Properties();
         propriedades.setProperty(variavel, valorDefinido);
 
-        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationProperties);
+        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationYml);
         while (matcher.find()) {
             if (matcher.group(1).equals(variavel)) {
                 var placeholder = matcher.group(0);
@@ -290,7 +290,7 @@ class ExternalizacaoConfiguracoesTest {
     @Test
     @DisplayName("Todas as variáveis sem default devem estar marcadas como obrigatórias no .env.example")
     void todasVariaveisSemDefaultDevemEstarMarcadasComoObrigatorias() {
-        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationProperties);
+        Matcher matcher = PADRAO_VARIAVEL_AMBIENTE.matcher(conteudoApplicationYml);
 
         while (matcher.find()) {
             String variavel = matcher.group(1);

@@ -4,7 +4,6 @@ import com.arremateai.propertycatalog.domain.ImagemImovel;
 import com.arremateai.propertycatalog.domain.Imovel;
 import com.arremateai.propertycatalog.dto.ImagemRequest;
 import com.arremateai.propertycatalog.dto.ImagemResponse;
-import com.arremateai.propertycatalog.exception.BusinessException;
 import com.arremateai.propertycatalog.repository.ImagemImovelRepository;
 import com.arremateai.propertycatalog.repository.ImovelRepository;
 import jakarta.persistence.EntityNotFoundException;

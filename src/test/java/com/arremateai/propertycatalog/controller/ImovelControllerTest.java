@@ -1,6 +1,12 @@
 package com.arremateai.propertycatalog.controller;
 
-import com.arremateai.propertycatalog.dto.*;
+import com.arremateai.propertycatalog.dto.AtualizarStatusRequest;
+import com.arremateai.propertycatalog.dto.ImagemRequest;
+import com.arremateai.propertycatalog.dto.ImagemResponse;
+import com.arremateai.propertycatalog.dto.ImovelRequest;
+import com.arremateai.propertycatalog.dto.ImovelResponse;
+import com.arremateai.propertycatalog.dto.VideoRequest;
+import com.arremateai.propertycatalog.dto.VideoResponse;
 import com.arremateai.propertycatalog.service.ImagemService;
 import com.arremateai.propertycatalog.service.ImovelService;
 import com.arremateai.propertycatalog.service.VideoService;
@@ -22,8 +28,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ImovelControllerTest {

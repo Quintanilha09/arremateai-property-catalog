@@ -1,8 +1,15 @@
 package com.arremateai.propertycatalog.controller;
 
-import com.arremateai.propertycatalog.dto.*;
-import com.arremateai.propertycatalog.service.ImovelService;
+import com.arremateai.propertycatalog.dto.AtualizarStatusRequest;
+import com.arremateai.propertycatalog.dto.EstatisticasImovelResponse;
+import com.arremateai.propertycatalog.dto.ImagemRequest;
+import com.arremateai.propertycatalog.dto.ImagemResponse;
+import com.arremateai.propertycatalog.dto.ImovelRequest;
+import com.arremateai.propertycatalog.dto.ImovelResponse;
+import com.arremateai.propertycatalog.dto.VideoRequest;
+import com.arremateai.propertycatalog.dto.VideoResponse;
 import com.arremateai.propertycatalog.service.ImagemService;
+import com.arremateai.propertycatalog.service.ImovelService;
 import com.arremateai.propertycatalog.service.VideoService;
 import com.arremateai.propertycatalog.service.VisualizacaoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +20,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;

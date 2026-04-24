@@ -1,8 +1,6 @@
 package com.arremateai.propertycatalog.service;
 
-import com.arremateai.propertycatalog.domain.ImagemImovel;
 import com.arremateai.propertycatalog.domain.Imovel;
-import com.arremateai.propertycatalog.domain.VideoImovel;
 import com.arremateai.propertycatalog.dto.ImagemResponse;
 import com.arremateai.propertycatalog.dto.ImovelRequest;
 import com.arremateai.propertycatalog.dto.ImovelResponse;

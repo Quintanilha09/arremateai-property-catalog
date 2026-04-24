@@ -3,16 +3,13 @@ package com.arremateai.propertycatalog.service;
 import com.arremateai.propertycatalog.domain.ImagemImovel;
 import com.arremateai.propertycatalog.domain.Imovel;
 import com.arremateai.propertycatalog.domain.VideoImovel;
-import com.arremateai.propertycatalog.dto.ImagemResponse;
 import com.arremateai.propertycatalog.dto.ImovelRequest;
 import com.arremateai.propertycatalog.dto.ImovelResponse;
-import com.arremateai.propertycatalog.dto.VideoResponse;
 import com.arremateai.propertycatalog.exception.BusinessException;
 import com.arremateai.propertycatalog.repository.ImagemImovelRepository;
 import com.arremateai.propertycatalog.repository.ImovelRepository;
 import com.arremateai.propertycatalog.repository.VideoImovelRepository;
 import com.arremateai.propertycatalog.repository.VisualizacaoImovelRepository;
-import com.arremateai.propertycatalog.service.VisualizacaoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,13 +26,18 @@ import org.springframework.data.jpa.domain.Specification;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ImovelServiceTest {

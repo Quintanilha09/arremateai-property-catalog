@@ -1,5 +1,7 @@
 # 🏠 ArremateAI - Property Catalog Service
 
+![CI](https://github.com/Quintanilha09/arremateai-property-catalog/actions/workflows/ci.yml/badge.svg)
+
 Microsserviço responsável por gerenciar o catálogo de imóveis, leilões, buscas avançadas e produtos relacionados.
 
 ## 📋 Descrição
